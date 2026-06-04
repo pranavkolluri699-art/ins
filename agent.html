@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insura</title>
+</head>
+
+<body>
+
+    <h1>Insura</h1>
+
+    <p>Welcome to Insura!!</p>
+
+    <p>Making Insurance Simple Through AI</p>
+
+    <button onclick="openAvatar()">
+        Talk with our Agent
+    </button>
+
+    <script>
+        function openAvatar() {
+            window.location.href = "agent.html";
+        }
+    </script>
+    <div id="avatar">
+        <img
+            src="avatar.jpg"
+            alt="Ai Avathar"
+            width="250">
+    </div>
+    <br>
+    <button onclick="startlistening()">
+        speak
+    </button>
+    <p id=""userText"></p>
+    <script>
+        function startlistening(){
+            const recognition=new webkitSpeechRecognition();
+            recognition.start();
+            recognition.onresult=function(event){
+                let text=event.results[0][0].transcript;
+                document.getElementById("userText").innerHTML="you said:"+text;
+            };
+        }
+    </script>
+
+
+</body>
+
+</html>
