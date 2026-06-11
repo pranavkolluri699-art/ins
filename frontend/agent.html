@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Insura Agent</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background-color:#f4f6f9;
+            text-align:center;
+            margin:20px;
+        }
+
+        .container{
+            background-color:white;
+            width:700px;
+            margin:auto;
+            padding:20px;
+            border-radius:10px;
+        }
+
+        #avatar img{
+            border-radius:10px;
+        }
+
+        button{
+            padding:10px 20px;
+            background-color:#0056b3;
+            color:white;
+            border:none;
+            cursor:pointer;
+            margin:5px;
+        }
+
+        button:hover{
+            background-color:#003d82;
+        }
+
+        input{
+            padding:10px;
+            width:300px;
+        }
+
+        #userText{
+            margin-top:20px;
+            font-weight:bold;
+        }
+
+        #response{
+            margin-top:20px;
+            background:#f0f0f0;
+            padding:15px;
+            border-radius:5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Insura</h1>
+
+        <p>Welcome to Insura!!</p>
+
+        <p>Making Insurance Simple Through AI</p>
+
+        <div id="avatar">
+
+            <img
+                src="avatar.png"
+                alt="AI Avatar"
+                width="250">
+
+        </div>
+
+        <br>
+
+        <button onclick="startListening()">
+            🎤 Speak
+        </button>
+
+        <p id="userText"></p>
+
+        <hr>
+
+        <h3>Ask About LIC Policies</h3>
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Enter Policy Name">
+
+        <button onclick="askPolicy()">
+            Ask Policy
+        </button>
+
+        <div id="response">
+            Policy information will appear here
+        </div>
+
+    </div>
+
+    <script>
+
+        function startListening(){
+
+            const recognition =
+                new webkitSpeechRecognition();
+
+            recognition.start();
+
+            recognition.onresult =
+            function(event){
+
+                let text =
+                    event.results[0][0].transcript;
+
+                document.getElementById(
+                    "userText"
+                ).innerHTML =
+                    "You said: " + text;
+
+                document.getElementById(
+                    "question"
+                ).value = text;
+            };
+        }
+
+        async function askPolicy(){
+
+            let question =
+                document.getElementById(
+                    "question"
+                ).value;
+
+            let response =
+                await fetch(
+                    "http://127.0.0.1:5000/search",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                            "application/json"
+                        },
+
+                        body:JSON.stringify({
+                            question:question
+                        })
+                    }
+                );
+
+            let data =
+                await response.json();
+
+            document.getElementById(
+                "response"
+            ).innerHTML =
+                data.answer;
+        }
+
+    </script>
+
+</body>
+
+</html>
+
