@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insura Agent</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+text-align:center;
+}
+
+button{
+padding:10px 20px;
+background:#0056b3;
+color:white;
+border:none;
+}
+
+input{
+padding:10px;
+width:300px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Insura AI Agent</h1>
+
+<img
+src="avatar.png"
+width="250">
+
+<br><br>
+
+<button onclick="startListening()">
+🎤 Speak
+</button>
+
+<p id="userText"></p>
+
+<hr>
+
+<input
+type="text"
+id="question"
+placeholder="Ask about LIC Policy">
+
+<button onclick="askPolicy()">
+Ask Policy
+</button>
+
+<p id="response"></p>
+
+<script>
+
+function startListening(){
+
+const recognition=
+new webkitSpeechRecognition();
+
+recognition.start();
+
+recognition.onresult=
+function(event){
+
+let text=
+event.results[0][0].transcript;
+
+document.getElementById(
+"userText"
+).innerHTML=
+"You said: "+text;
+
+document.getElementById(
+"question"
+).value=text;
+
+};
+
+}
+
+async function askPolicy(){
+
+let question=
+document.getElementById(
+"question"
+).value;
+
+let response=
+await fetch(
+"http://127.0.0.1:5000/search",
+{
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:JSON.stringify({
+question:question
+})
+
+}
+);
+
+let data=
+await response.json();
+
+document.getElementById(
+"response"
+).innerHTML=
+data.answer;
+
+}
+
+</script>
+
+</body>
+</html>

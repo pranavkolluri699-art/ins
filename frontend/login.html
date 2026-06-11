@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Insura Login</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background-color:#f4f6f9;
+            text-align:center;
+            margin-top:100px;
+        }
+
+        .container{
+            background:white;
+            width:350px;
+            margin:auto;
+            padding:25px;
+            border-radius:10px;
+        }
+
+        input{
+            width:90%;
+            padding:10px;
+        }
+
+        button{
+            padding:10px 20px;
+            background-color:#0056b3;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background-color:#003d82;
+        }
+
+        #message{
+            color:red;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Insura Login</h2>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter username">
+
+        <br><br>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter password">
+
+        <br><br>
+
+        <button onclick="login()">
+            Login
+        </button>
+
+        <p id="message"></p>
+
+    </div>
+
+    <script>
+
+        function login(){
+
+            let username =
+                document.getElementById("username").value;
+
+            let password =
+                document.getElementById("password").value;
+
+            if(
+                username === "admin" &&
+                password === "12345"
+            ){
+
+                localStorage.setItem(
+                    "username",
+                    username
+                );
+
+                window.location.href =
+                    "home.html";
+
+            }
+
+            else{
+
+                document.getElementById(
+                    "message"
+                ).innerHTML =
+                "Invalid username or password";
+
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
