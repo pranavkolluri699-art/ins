@@ -1,15 +1,32 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Insura Agent</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insura AI Agent</title>
 
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#f4f6f9;
 text-align:center;
+margin:20px;
+}
+
+.container{
+background:white;
+width:900px;
+margin:auto;
+padding:20px;
+border-radius:10px;
+}
+
+input{
+width:500px;
+padding:10px;
+margin:10px;
 }
 
 button{
@@ -17,11 +34,17 @@ padding:10px 20px;
 background:#0056b3;
 color:white;
 border:none;
+border-radius:5px;
+cursor:pointer;
 }
 
-input{
-padding:10px;
-width:300px;
+#response{
+margin-top:20px;
+padding:15px;
+background:#f0f0f0;
+border-radius:10px;
+white-space:pre-wrap;
+text-align:left;
 }
 
 </style>
@@ -30,10 +53,13 @@ width:300px;
 
 <body>
 
+<div class="container">
+
 <h1>Insura AI Agent</h1>
 
 <img
 src="avatar.png"
+alt="Avatar"
 width="250">
 
 <br><br>
@@ -44,57 +70,62 @@ width="250">
 
 <p id="userText"></p>
 
-<hr>
-
 <input
 type="text"
 id="question"
-placeholder="Ask about LIC Policy">
+placeholder="Ask anything about insurance...">
 
-<button onclick="askPolicy()">
-Ask Policy
+<button onclick="askAgent()">
+Send
 </button>
 
-<p id="response"></p>
+<div id="response">
+Welcome to Insura. Ask me about policies, recommendations or enrollments.
+</div>
+
+</div>
 
 <script>
 
 function startListening(){
 
-const recognition=
+const recognition =
 new webkitSpeechRecognition();
 
 recognition.start();
 
-recognition.onresult=
+recognition.onresult =
 function(event){
 
-let text=
+let text =
 event.results[0][0].transcript;
 
 document.getElementById(
 "userText"
-).innerHTML=
-"You said: "+text;
+).innerHTML =
+"You said: " + text;
 
 document.getElementById(
 "question"
-).value=text;
+).value =
+text;
+
+askAgent();
 
 };
 
 }
 
-async function askPolicy(){
+async function askAgent(){
 
-let question=
+let question =
 document.getElementById(
 "question"
 ).value;
 
-let response=
+let response =
 await fetch(
-"http://127.0.0.1:5000/search",
+"http://127.0.0.1:5000/chat",
 {
 method:"POST",
 
@@ -106,17 +137,31 @@ headers:{
 body:JSON.stringify({
 question:question
 })
-
 }
 );
 
-let data=
+let data =
 await response.json();
 
 document.getElementById(
 "response"
-).innerHTML=
+).innerHTML =
 data.answer;
+
+speak(data.answer);
+
+}
+
+function speak(text){
+
+let speech =
+new SpeechSynthesisUtterance(
+text
+);
+
+speechSynthesis.speak(
+speech
+);
 
 }
 

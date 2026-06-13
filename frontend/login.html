@@ -3,44 +3,48 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insura Login</title>
 
     <style>
 
-        body{
+        body {
             font-family: Arial, sans-serif;
-            background-color:#f4f6f9;
-            text-align:center;
-            margin-top:100px;
+            background: #f4f6f9;
+            text-align: center;
+            margin-top: 100px;
         }
 
-        .container{
-            background:white;
-            width:350px;
-            margin:auto;
-            padding:25px;
-            border-radius:10px;
+        .container {
+            background: white;
+            width: 350px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
         }
 
-        input{
-            width:90%;
-            padding:10px;
+        input {
+            width: 90%;
+            padding: 10px;
         }
 
-        button{
-            padding:10px 20px;
-            background-color:#0056b3;
-            color:white;
-            border:none;
-            cursor:pointer;
+        button {
+            padding: 10px 20px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
-        button:hover{
-            background-color:#003d82;
+        button:hover {
+            background: #003d82;
         }
 
-        #message{
-            color:red;
+        #message {
+            color: red;
+            margin-top: 10px;
         }
 
     </style>
@@ -56,19 +60,25 @@
         <input
             type="text"
             id="username"
-            placeholder="Enter username">
+            placeholder="Enter Username">
 
         <br><br>
 
         <input
             type="password"
             id="password"
-            placeholder="Enter password">
+            placeholder="Enter Password">
 
         <br><br>
 
         <button onclick="login()">
             Login
+        </button>
+
+        <br><br>
+
+        <button onclick="window.location.href='home.html'">
+            Back to Home
         </button>
 
         <p id="message"></p>
@@ -77,18 +87,22 @@
 
     <script>
 
-        function login(){
+        function login() {
 
             let username =
-                document.getElementById("username").value;
+                document.getElementById(
+                    "username"
+                ).value;
 
             let password =
-                document.getElementById("password").value;
+                document.getElementById(
+                    "password"
+                ).value;
 
-            if(
+            if (
                 username === "admin" &&
                 password === "12345"
-            ){
+            ) {
 
                 localStorage.setItem(
                     "username",
@@ -100,14 +114,15 @@
 
             }
 
-            else{
+            else {
 
                 document.getElementById(
                     "message"
                 ).innerHTML =
-                "Invalid username or password";
+                    "Invalid Username or Password";
 
             }
+
         }
 
     </script>

@@ -4,54 +4,56 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Insura</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insura - AI Insurance Assistant</title>
 
     <style>
 
-        body{
-            font-family:Arial,sans-serif;
-            background-color:#f4f6f9;
-            margin:0;
-            text-align:center;
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            text-align: center;
         }
 
-        .header{
-            background-color:#0056b3;
-            color:white;
-            padding:20px;
-            position:relative;
+        .header {
+            background: #0056b3;
+            color: white;
+            padding: 20px;
+            position: relative;
         }
 
-        #userInfo{
-            position:absolute;
-            top:20px;
-            right:20px;
+        #userInfo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
-        button{
-            padding:10px 20px;
-            margin:10px;
-            background-color:#0056b3;
-            color:white;
-            border:none;
-            border-radius:5px;
-            cursor:pointer;
+        .hero {
+            padding: 40px;
         }
 
-        button:hover{
-            background-color:#003d82;
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #003d82;
         }
 
         .about,
         .features,
-        .agent{
-            background:white;
-            margin:20px;
-            padding:30px;
-            border-radius:10px;
+        .agent {
+            background: white;
+            margin: 20px;
+            padding: 25px;
+            border-radius: 10px;
         }
 
     </style>
@@ -70,14 +72,23 @@
 
     </div>
 
+    <div class="hero">
+
+        <h2>Welcome to INSURA</h2>
+
+        <p>Your Smart AI Insurance Assistant</p>
+
+    </div>
+
     <div class="about">
 
-        <h2>About INSURA</h2>
+        <h2>About Insura</h2>
 
         <p>
             Insura is an AI-powered insurance assistant
             that helps users understand insurance policies,
-            compare plans and receive recommendations.
+            compare plans, receive recommendations and
+            enroll in suitable insurance plans.
         </p>
 
     </div>
@@ -89,8 +100,8 @@
         <p>✅ AI Insurance Assistance</p>
         <p>✅ Policy Recommendations</p>
         <p>✅ Voice Interaction</p>
-        <p>✅ 24/7 Customer Support</p>
-        <p>✅ Easy Policy Enrollment</p>
+        <p>✅ Customer Enrollment</p>
+        <p>✅ 24/7 Support</p>
 
     </div>
 
@@ -109,38 +120,38 @@
         let username =
             localStorage.getItem("username");
 
-        if(username){
+        if (username) {
 
             document.getElementById(
                 "userInfo"
             ).innerHTML =
-            "👤 " + username +
-            ' <button onclick="logout()">Logout</button>';
+                "👤 " + username +
+                ' <button onclick="logout()">Logout</button>';
 
         }
 
-        else{
+        else {
 
             document.getElementById(
                 "userInfo"
             ).innerHTML =
-            '<button onclick="window.location.href=\'login.html\'">Login</button>';
+                '<button onclick="window.location.href=\'login.html\'">Login</button>';
 
         }
 
-        function openAgent(){
+        function openAgent() {
 
             let username =
                 localStorage.getItem("username");
 
-            if(username){
+            if (username) {
 
                 window.location.href =
                     "agent.html";
 
             }
 
-            else{
+            else {
 
                 alert(
                     "Please Login First"
@@ -150,15 +161,17 @@
                     "login.html";
 
             }
+
         }
 
-        function logout(){
+        function logout() {
 
             localStorage.removeItem(
                 "username"
             );
 
             location.reload();
+
         }
 
     </script>
@@ -166,4 +179,3 @@
 </body>
 
 </html>
-
