@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,26 +12,73 @@
 body{
 font-family:Arial,sans-serif;
 background:#f4f6f9;
-text-align:center;
-margin:20px;
+margin:0;
+padding:0;
 }
 
 .container{
+max-width:900px;
+margin:20px auto;
 background:white;
-width:900px;
-margin:auto;
 padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h1{
+text-align:center;
+color:#0056b3;
+}
+
+.avatar{
+text-align:center;
+}
+
+.avatar img{
+width:220px;
 border-radius:10px;
 }
 
-input{
-width:500px;
+.chat-box{
+height:450px;
+overflow-y:auto;
+border:1px solid #ddd;
+padding:15px;
+border-radius:10px;
+background:#fafafa;
+margin-top:20px;
+}
+
+.user{
+background:#d9ecff;
 padding:10px;
+border-radius:10px;
 margin:10px;
+text-align:right;
+}
+
+.bot{
+background:#eeeeee;
+padding:10px;
+border-radius:10px;
+margin:10px;
+text-align:left;
+}
+
+.input-area{
+display:flex;
+gap:10px;
+margin-top:15px;
+}
+
+input{
+flex:1;
+padding:12px;
+font-size:16px;
 }
 
 button{
-padding:10px 20px;
+padding:12px 20px;
 background:#0056b3;
 color:white;
 border:none;
@@ -38,13 +86,15 @@ border-radius:5px;
 cursor:pointer;
 }
 
-#response{
-margin-top:20px;
-padding:15px;
-background:#f0f0f0;
-border-radius:10px;
-white-space:pre-wrap;
-text-align:left;
+button:hover{
+background:#003d82;
+}
+
+.status{
+text-align:center;
+margin-top:10px;
+font-weight:bold;
+color:green;
 }
 
 </style>
@@ -57,18 +107,41 @@ text-align:left;
 
 <h1>Insura AI Agent</h1>
 
+<div class="avatar">
+
 <img
 src="avatar.png"
-alt="Avatar"
-width="250">
+alt="AI Avatar">
 
-<br><br>
+</div>
 
-<button onclick="startListening()">
-🎤 Speak
-</button>
+<div
+id="chatBox"
+class="chat-box">
 
-<p id="userText"></p>
+<div class="bot">
+
+Hello 👋
+
+I am Insura.
+
+I can:
+
+• Explain LIC Policies
+
+• Recommend Policies
+
+• Compare Policies
+
+• Enroll Customers
+
+Speak or type your question.
+
+</div>
+
+</div>
+
+<div class="input-area">
 
 <input
 type="text"
@@ -79,40 +152,56 @@ placeholder="Ask anything about insurance...">
 Send
 </button>
 
-<div id="response">
-Welcome to Insura. Ask me about policies, recommendations or enrollments.
+<button onclick="startListening()">
+🎤 Start
+</button>
+
+<button onclick="stopListening()">
+🛑 Stop
+</button>
+
+</div>
+
+<div
+id="status"
+class="status">
+
+Voice Assistant Off
+
 </div>
 
 </div>
 
 <script>
 
-function startListening(){
+let recognition;
+let listening = false;
 
-const recognition =
-new webkitSpeechRecognition();
+function addMessage(
+message,
+type
+){
 
-recognition.start();
-
-recognition.onresult =
-function(event){
-
-let text =
-event.results[0][0].transcript;
-
+let chatBox =
 document.getElementById(
-"userText"
-).innerHTML =
-"You said: " + text;
+"chatBox"
+);
 
-document.getElementById(
-"question"
-).value =
-text;
+let div =
+document.createElement(
+"div"
+);
 
-askAgent();
+div.className = type;
 
-};
+div.innerText = message;
+
+chatBox.appendChild(
+div
+);
+
+chatBox.scrollTop =
+chatBox.scrollHeight;
 
 }
 
@@ -122,6 +211,23 @@ let question =
 document.getElementById(
 "question"
 ).value;
+
+if(
+question.trim()===""
+){
+return;
+}
+
+addMessage(
+question,
+"user"
+);
+
+document.getElementById(
+"question"
+).value = "";
+
+try{
 
 let response =
 await fetch(
@@ -143,21 +249,127 @@ question:question
 let data =
 await response.json();
 
-document.getElementById(
-"response"
-).innerHTML =
-data.answer;
+addMessage(
+data.answer,
+"bot"
+);
 
-speak(data.answer);
+speak(
+data.answer
+);
+
+}
+catch(error){
+
+addMessage(
+"Unable to connect to server.",
+"bot"
+);
+
+}
+
+}
+
+function startListening(){
+
+if(listening){
+return;
+}
+
+recognition =
+new webkitSpeechRecognition();
+
+recognition.continuous = true;
+
+recognition.interimResults = false;
+
+recognition.lang = "en-US";
+
+listening = true;
+
+document.getElementById(
+"status"
+).innerHTML =
+"🎤 Listening...";
+
+recognition.start();
+
+recognition.onresult =
+function(event){
+
+let text =
+event.results[
+event.results.length-1
+][0].transcript;
+
+document.getElementById(
+"question"
+).value =
+text;
+
+askAgent();
+
+};
+
+recognition.onend =
+function(){
+
+if(listening){
+
+recognition.start();
+
+}
+
+};
+
+}
+
+function stopListening(){
+
+listening = false;
+
+if(recognition){
+
+recognition.stop();
+
+}
+
+document.getElementById(
+"status"
+).innerHTML =
+"Voice Assistant Off";
 
 }
 
 function speak(text){
 
+if(recognition){
+
+recognition.stop();
+
+}
+
 let speech =
 new SpeechSynthesisUtterance(
 text
 );
+
+speech.rate = 1;
+
+speech.pitch = 1;
+
+speech.lang = "en-US";
+
+speech.onend =
+function(){
+
+if(listening){
+
+recognition.start();
+
+}
+
+};
 
 speechSynthesis.speak(
 speech
@@ -165,7 +377,27 @@ speech
 
 }
 
+document
+.getElementById(
+"question"
+)
+.addEventListener(
+"keypress",
+function(event){
+
+if(
+event.key==="Enter"
+){
+
+askAgent();
+
+}
+
+}
+);
+
 </script>
 
 </body>
+
 </html>
