@@ -153,7 +153,7 @@ def chat():
 
                     policy_context += (
                         f"\nPolicy Name: {sheet}\n"
-                        + df.to_string(index=False)
+                        + df.head(5).to_string(index=False)
                         + "\n"
                     )
 

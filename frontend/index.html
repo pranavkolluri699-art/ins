@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech to Text Demo</title>
+    <style>
+#avatar{
+    border-radius:15px;
+}
+
+.speaking{
+    box-shadow:0 0 30px green;
+}
+</style>
+</head>
+<body>
+    <img id="avatar" src="avatar.png" width="250">
+
+    <h1>Insurance Voice Assistant</h1>
+
+<select id="language">
+    <option value="en-US">English</option>
+    <option value="te-IN">Telugu</option>
+    <option value="hi-IN">Hindi</option>
+</select>
+
+<button id="startBtn">Start Talking</button>
+
+    
+
+    <h3>You Said:</h3>
+    <p id="output">Waiting...</p>
+    <h3>Insura Says:</h3>
+    <p id="answer">Waiting for response...</p>
+
+    <script>
+        const startBtn = document.getElementById("startBtn");
+        const output = document.getElementById("output");
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+        const recognition = new SpeechRecognition();
+
+        
+        recognition.continuous = false;
+
+        startBtn.addEventListener("click", () => {
+            recognition.start();
+        });
+
+        recognition.onresult = (event) => {
+
+    const text = event.results[0][0].transcript;
+
+    output.innerText = text;
+
+    fetch("http://localhost:5000/chat", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            question: text
+        })
+
+    })
+    .then(response => response.json())
+    .then(data => {
+
+       document.getElementById("answer").innerText =
+    data.answer;
+
+const speech = new SpeechSynthesisUtterance(data.answer);
+
+const avatar =
+    document.getElementById("avatar");
+
+speech.onstart = () => {
+    avatar.classList.add("speaking");
+};
+
+speech.onend = () => {
+    avatar.classList.remove("speaking");
+};
+
+speechSynthesis.speak(speech);
+
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+};
+
+        recognition.onerror = (event) => {
+            console.log(event.error);
+        };
+    </script>
+
+</body>
+</html>
